@@ -32,6 +32,13 @@ class VectorStore:
         with self._lock:
             return len(self._chunks)
 
+    def clear(self) -> None:
+        with self._lock:
+            self._dim = None
+            self._index = None
+            self._chunks = []
+            logger.info("Vector store cleared")
+
     def add(self, chunks: list[TextChunk], vectors: np.ndarray) -> None:
         if len(chunks) != vectors.shape[0]:
             raise ValueError("chunks and vectors length mismatch")

@@ -29,6 +29,13 @@ def health() -> dict[str, str | bool]:
     return {"status": "ok", "gemini_configured": gemini_is_configured()}
 
 
+@router.post("/reset")
+def reset_index() -> dict[str, str]:
+    """Clear in-memory FAISS index and chunk list (e.g. start a new chat session)."""
+    vector_store.clear()
+    return {"status": "ok", "message": "Index cleared"}
+
+
 @router.post("/upload")
 async def upload(files: Annotated[list[UploadFile], File(...)]) -> dict[str, object]:
     if not files:

@@ -59,6 +59,12 @@ export async function healthCheck(): Promise<HealthResponse> {
   return res.json()
 }
 
+/** Clears server-side vector index (start a fresh RAG session). */
+export async function resetIndex(): Promise<void> {
+  const res = await fetch(url('/reset'), { method: 'POST' })
+  if (!res.ok) throw new Error(await parseError(res))
+}
+
 export async function uploadFiles(files: File[]): Promise<UploadResponse> {
   const form = new FormData()
   for (const f of files) {

@@ -9,9 +9,11 @@ function newId() {
 
 interface Props {
   onSystemMessage: (text: string) => void
+  /** Clears chat UI + server index; parent remounts children after reset. */
+  onNewChat: () => void
 }
 
-export function ChatWindow({ onSystemMessage }: Props) {
+export function ChatWindow({ onSystemMessage, onNewChat }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [mode, setMode] = useState<QueryMode>('qa')
@@ -119,9 +121,18 @@ export function ChatWindow({ onSystemMessage }: Props) {
           disabled={isStreaming}
           className="w-16 rounded-lg border border-zinc-300 bg-white px-2 py-1 text-sm dark:border-zinc-600 dark:bg-zinc-800"
         />
-        <span className="text-xs text-zinc-400 dark:text-zinc-500">
+        <span className="hidden text-xs text-zinc-400 sm:inline dark:text-zinc-500">
           Streaming on
         </span>
+        <button
+          type="button"
+          onClick={onNewChat}
+          disabled={isStreaming}
+          title="Clear chat and index; upload new files for a fresh session"
+          className="ml-auto rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+        >
+          New chat
+        </button>
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto px-4 py-4">

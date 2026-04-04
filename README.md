@@ -19,7 +19,7 @@ cp .env.example .env        # set GOOGLE_API_KEY
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Endpoints: `GET /health`, `POST /upload` (multipart field `files`), `POST /query` (JSON, full response), `POST /query/stream` (same JSON body, **NDJSON** stream: `meta` → `delta` lines → `done`). The web UI uses streaming for ChatGPT-style token output. API docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
+Endpoints: `GET /health`, `POST /upload` (multipart field `files`), `POST /reset` (clears in-memory FAISS index for a new session), `POST /query` (JSON, full response), `POST /query/stream` (same JSON body, **NDJSON** stream: `meta` → `delta` lines → `done`). The web UI uses streaming and a **New chat** button that resets the index. API docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
 
 If `/query` returns **429**, the Gemini free tier quota for that chat model is exhausted (per minute/day). Wait, change `GOOGLE_CHAT_MODEL` (e.g. to `gemini-1.5-flash`), or enable billing—see [rate limits](https://ai.google.dev/gemini-api/docs/rate-limits).
 

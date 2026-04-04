@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { healthCheck } from './api/ragApi'
+import { healthCheck, resetIndex } from './api/ragApi'
 import { ChatWindow } from './components/ChatWindow'
 import { FileUpload } from './components/FileUpload'
 
@@ -7,6 +7,7 @@ function App() {
   const [status, setStatus] = useState<'checking' | 'ok' | 'error'>('checking')
   const [geminiConfigured, setGeminiConfigured] = useState<boolean | null>(null)
   const [banner, setBanner] = useState<string | null>(null)
+  const [chatSessionId, setChatSessionId] = useState(0)
 
   useEffect(() => {
     let cancelled = false
@@ -36,6 +37,18 @@ function App() {
 
   const onSystemMessage = useCallback((text: string) => {
     setBanner(text)
+  }, [])
+
+  const handleNewChat = useCallback(async () => {
+    try {
+      await resetIndex()
+      setChatSessionId((n) => n + 1)
+      setBanner('New chat — upload documents to index them for this conversation.')
+    } catch (e) {
+      setBanner(
+        e instanceof Error ? `Could not start new chat: ${e.message}` : 'Could not reset the index.',
+      )
+    }
   }, [])
 
   return (
@@ -88,14 +101,18 @@ function App() {
           <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-zinc-500">
             Documents
           </h2>
-          <FileUpload onUploaded={onUploaded} onError={onUploadError} />
+          <FileUpload key={chatSessionId} onUploaded={onUploaded} onError={onUploadError} />
         </section>
 
         <section aria-label="Chat">
           <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-zinc-500">
             Chat
           </h2>
-          <ChatWindow onSystemMessage={onSystemMessage} />
+          <ChatWindow
+            key={chatSessionId}
+            onSystemMessage={onSystemMessage}
+            onNewChat={handleNewChat}
+          />
         </section>
       </main>
     </div>
