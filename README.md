@@ -2,6 +2,26 @@
 
 Full-stack app: upload `.txt` / `.py` files, index chunks with **Google Gemini embeddings** into an in-memory FAISS store, then chat with a **Gemini** model using retrieved context (RAG).
 
+## Screenshots
+
+### Home — upload & chat
+
+Upload `.txt` / `.py` files, see indexed documents, and start a conversation with streaming answers.
+
+![Home page — upload area and chat UI](screenShots/homePage.png)
+
+### Ask a question
+
+Ask about your uploaded code or text; the assistant replies with context-aware answers (streaming).
+
+![Response to a question](screenShots/responseToQuestion.png)
+
+### Retrieved context
+
+Expand **Retrieved context** to see which file chunks were used for the answer (file, score, excerpt).
+
+![Retrieved chunks used for the answer](screenShots/InternalChunks.png)
+
 ## Prerequisites
 
 - Python 3.10+
